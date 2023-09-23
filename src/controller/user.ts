@@ -10,7 +10,7 @@ router.use((req, res, next) => {
 });
 router.get('/info', (req, res, next) =>{
     const response = {
-        username: 'Orangethefish',
+        username: 'orangethefish',
         cart: 24
     }
     res.json(response);
