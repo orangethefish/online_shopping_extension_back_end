@@ -1,9 +1,10 @@
 import express from 'express';
-
+import {run} from '../models/mongo_connect';
 interface cartItem{
+    username: string,
     image: string,
     name: string,
-    price: string
+    price: any
 }
 
 const router = express.Router();
@@ -29,9 +30,12 @@ router.post('/update-cart', (req, res, next) =>{
             return cartItems.findIndex(i => i.name === item.name) === index;
           });
         for(let cartItem of filtered){
+            const newPrice = Number(cartItem.price.replace(/\D/g,''));
+            cartItem.price = newPrice;
             console.log(cartItem);
         }
         res.status(200).json({ message: 'Received' }); 
+        run();
     }catch(err){
         console.log(err);
     }
