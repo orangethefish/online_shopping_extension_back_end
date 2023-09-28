@@ -1,5 +1,6 @@
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const { mongo_uri } = require('../credentials/credential.ts');
+import { mongo_uri } from '../../credentials/credential';
+
 const uri = mongo_uri;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -11,7 +12,7 @@ const client = new MongoClient(uri, {
   }
 });
 
-export async function run() {
+async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
@@ -23,4 +24,4 @@ export async function run() {
     await client.close();
   }
 }
-run().catch(console.dir);
+export default run;

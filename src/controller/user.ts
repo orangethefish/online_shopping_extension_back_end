@@ -1,5 +1,4 @@
 import express from 'express';
-import {run} from '../models/mongo_connect';
 interface cartItem{
     username: string,
     image: string,
@@ -35,7 +34,6 @@ router.post('/update-cart', (req, res, next) =>{
             console.log(cartItem);
         }
         res.status(200).json({ message: 'Received' }); 
-        run();
     }catch(err){
         console.log(err);
     }
