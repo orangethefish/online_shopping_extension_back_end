@@ -1,12 +1,6 @@
 import express from 'express';
-interface cartItem{
-    username: string,
-    image: string,
-    name: string,
-    link: string,
-    price: any
-}
-
+import { cartItem } from '../../interfaces';
+import addData from '../models/modify_cart';
 const router = express.Router();
 
 router.use((req, res, next) => {
@@ -26,14 +20,20 @@ router.get('/info', (req, res, next) =>{
 router.post('/update-cart', (req, res, next) =>{
     try{
         const cartItems: cartItem[] = req.body;
-        const filtered = cartItems.filter((item, index) => {
-            return cartItems.findIndex(i => i.name === item.name) === index;
-          });
-        for(let cartItem of filtered){
-            const newPrice = Number(cartItem.price.replace(/\D/g,''));
+        const uniqueCartItems = new Set();
+        // Add each cart item to the set.
+        cartItems.forEach((cartItem) => {
+            uniqueCartItems.add(cartItem);
+        });
+        // Convert the set back to an array.
+        const filteredCartItems = Array.from(uniqueCartItems) as cartItem[];
+        // Update the prices and timestamps of the filtered cart items.
+        filteredCartItems.forEach((cartItem) => {
+            const newPrice = Number(cartItem.price.replace(/\D/g, ""));
             cartItem.price = newPrice;
-            console.log(cartItem);
-        }
+        });
+        // Add the filtered cart items to the database.
+        addData(filteredCartItems);
         res.status(200).json({ message: 'Received' }); 
     }catch(err){
         console.log(err);

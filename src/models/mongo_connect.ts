@@ -4,7 +4,7 @@ import { mongo_uri } from '../../credentials/credential';
 const uri = mongo_uri;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
+export const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,
@@ -12,16 +12,15 @@ const client = new MongoClient(uri, {
   }
 });
 
-async function run() {
+async function mongo_connect() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     // Send a ping to confirm a successful connection
     await client.db("chrome-extension").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
+  }catch(err){
+    console.log(err);
   }
 }
-export default run;
+export default mongo_connect;
