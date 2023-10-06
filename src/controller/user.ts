@@ -3,6 +3,7 @@ interface cartItem{
     username: string,
     image: string,
     name: string,
+    link: string,
     price: any
 }
 
