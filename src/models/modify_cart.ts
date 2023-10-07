@@ -16,20 +16,21 @@ async function addData(cartItems: cartItem[]) {
             }
         });
         const existingDocs : document[] = await collection.find().toArray(); 
-        // Get existing names
-        const existingNames = existingDocs.map(d => d.name);
-        
         // Filter out duplicates
-        const filteredItems :document[] = documents.filter(item => {
-            return !existingNames.includes(item.name);
-        });
-        const itemsToDelte= existingDocs.filter(item => {
-            return !documents.some(d => d.name === item.name);
-        });
+        const filteredItems = documents.filter(item => {
+            return !existingDocs.some(doc => {
+              return doc.name === item.name && doc.username === item.username; 
+            });
+          });
+        const itemsToDelete:document[] = existingDocs.filter(doc => {
+            return !documents.some(item => {
+              return doc.name === item.name && doc.username === item.username;
+            });
+         });
         // Add the filtered items to the database
         (filteredItems.length === 0) ? console.log("No new items to add") : await collection.insertMany(filteredItems);
         // Delete items that are no longer in the cart
-        (itemsToDelte.length === 0) ? console.log("No items to delete") : await collection.deleteMany({name: {$in: itemsToDelte.map(item => item.name)}});
+        (itemsToDelete.length === 0) ? console.log("No items to delete") : await collection.deleteMany({name: {$in: itemsToDelete.map(item => item.name)}});
     } catch (error) {
         console.error("Error adding data:", error);
     }
