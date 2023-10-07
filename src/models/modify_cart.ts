@@ -23,11 +23,13 @@ async function addData(cartItems: cartItem[]) {
         const filteredItems :document[] = documents.filter(item => {
             return !existingNames.includes(item.name);
         });
-        if(filteredItems.length === 0){
-            return;
-        }else{
-            await collection.insertMany(filteredItems);
-        }
+        const itemsToDelte= existingDocs.filter(item => {
+            return !documents.some(d => d.name === item.name);
+        });
+        // Add the filtered items to the database
+        (filteredItems.length === 0) ? console.log("No new items to add") : await collection.insertMany(filteredItems);
+        // Delete items that are no longer in the cart
+        (itemsToDelte.length === 0) ? console.log("No items to delete") : await collection.deleteMany({name: {$in: itemsToDelte.map(item => item.name)}});
     } catch (error) {
         console.error("Error adding data:", error);
     }
