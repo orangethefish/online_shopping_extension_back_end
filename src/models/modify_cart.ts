@@ -28,9 +28,9 @@ async function addData(cartItems: cartItem[]) {
             });
          });
         // Add the filtered items to the database
-        (filteredItems.length === 0) ? console.log("No new items to add") : await collection.insertMany(filteredItems);
+        (filteredItems.length === 0) ? undefined : await collection.insertMany(filteredItems);
         // Delete items that are no longer in the cart
-        (itemsToDelete.length === 0) ? console.log("No items to delete") : await collection.deleteMany({name: {$in: itemsToDelete.map(item => item.name)}});
+        (itemsToDelete.length === 0) ? undefined : await collection.deleteMany({name: {$in: itemsToDelete.map(item => item.name)}});
     } catch (error) {
         console.error("Error adding data:", error);
     }
