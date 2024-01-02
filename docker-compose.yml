@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  mongo:
+    container_name: mongodb
+    image: mongo:${MONGO_VERSION} # https://hub.docker.com/_/mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - 27018:27017
+    healthcheck:
+      test: test $$(echo "rs.initiate().ok || rs.status().ok" | mongo -u $${MONGO_INITDB_ROOT_USERNAME} -p $${MONGO_INITDB_ROOT_PASSWORD} --quiet) -eq 1
+      start_period: 30s
+    restart: unless-stopped

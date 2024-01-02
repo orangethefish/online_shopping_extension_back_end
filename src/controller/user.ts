@@ -1,5 +1,5 @@
 import express from 'express';
-import { cartItem } from '../../interfaces';
+import { cartItem } from '../constants/interfaces';
 import addData from '../models/modify_cart';
 const router = express.Router();
 
@@ -9,13 +9,13 @@ router.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
 });
-router.get('/info', (req, res, next) =>{
-    const response = {
-        username: 'orangethefish',
-        cart: 24
-    }
-    res.json(response);
-})
+// router.get('/info', (req, res, next) =>{
+//     const response = {
+//         username: 'orangethefish',
+//         cart: 24
+//     }
+//     res.json(response);
+// })
 
 router.post('/update-cart', (req, res, next) =>{
     try{

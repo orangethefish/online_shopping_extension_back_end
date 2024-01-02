@@ -1,26 +1,20 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
-import { mongo_uri } from '../../credentials/credential';
+import mongoose from "mongoose";
 
-const uri = mongo_uri;
+import { config } from '../constants/interfaces';
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-export const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
 
 async function mongo_connect() {
-  try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("chrome-extension").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  }catch(err){
-    console.log(err);
-  }
+  mongoose.connect(config.server.mongoUrl);
+
+  const dbConnection = mongoose.connection;
+
+  dbConnection.once('open', () => {
+    console.log(`Connected to MongoDB with connection string: ${config.server.mongoUrl}`)
+  })
+
+  dbConnection.on('error', (error) => {
+    console.log(`Error connecting to MongoDB: ${error}`)
+  })
+  return
 }
 export default mongo_connect;
